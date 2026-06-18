@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
+import { useSearch } from '../../context/SearchContext';
 import { FunnelIcon } from "@heroicons/react/24/solid";
 
 export default function SearchNav() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const { searchTerm, setSearchTerm } = useSearch();
   const [selectedTrending, setSelectedTrending] = useState('');
   const [showFilter, setShowFilter] = useState(false);
 
@@ -113,13 +114,13 @@ export default function SearchNav() {
     }
   ];
 
-  const filteredMovies = searchQuery.trim() !== '' || selectedTrending !== ''
+  const filteredMovies = searchTerm.trim() !== '' || selectedTrending !== ''
     ? mockMovies.filter(movie =>
-        movie.title.toLowerCase().includes((searchQuery || selectedTrending).toLowerCase())
+        movie.title.toLowerCase().includes((searchTerm || selectedTrending).toLowerCase())
       )
     : mockMovies.sort((a, b) => b.rating - a.rating);
 
-  const hasSearchOrTrending = searchQuery.trim() !== '' || selectedTrending !== '';
+  const hasSearchOrTrending = searchTerm.trim() !== '' || selectedTrending !== '';
 
   return (
     <div className='bg-gray-950 min-h-screen text-white pb-10'>
@@ -128,8 +129,8 @@ export default function SearchNav() {
         <div className='w-full max-w-2xl'>
           <input
             type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder='Search movies, shows...'
             className='w-full h-14 border-2 border-amber-400 rounded-2xl bg-gray-900 text-amber-50 p-4 text-[16px] focus:outline-none focus:border-amber-300 transition'
           />
@@ -143,7 +144,7 @@ export default function SearchNav() {
               key={idx}
               onClick={() => {
                 setSelectedTrending(trend);
-                setSearchQuery('');
+                setSearchTerm('');
               }}
               className={`w-fit border px-4 py-2 rounded-full text-[14px] transition-all cursor-pointer ${
                 selectedTrending === trend
@@ -162,7 +163,7 @@ export default function SearchNav() {
         <div className='px-6 mt-10 flex justify-between items-center flex-wrap gap-4'>
           <div className='flex gap-2 items-center'>
             <p className='text-cyan-400 font-bold text-[18px]'>Results for</p>
-            <span className='text-amber-400 font-bold text-[18px]'>"{searchQuery || selectedTrending}"</span>
+            <span className='text-amber-400 font-bold text-[18px]'>"{searchTerm || selectedTrending}"</span>
           </div>
           <div className='flex gap-3 items-center'>
             <p className='text-amber-400 font-semibold text-[14px]'>{filteredMovies.length} Results found</p>
@@ -210,7 +211,7 @@ export default function SearchNav() {
       {/* Empty State */}
       {hasSearchOrTrending && filteredMovies.length === 0 && (
         <div className='flex items-center justify-center h-64 text-gray-400'>
-          <p className='text-lg'>No results found for "{searchQuery || selectedTrending}"</p>
+          <p className='text-lg'>No results found for "{searchTerm || selectedTrending}"</p>
         </div>
       )}
     </div>

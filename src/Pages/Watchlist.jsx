@@ -2,11 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { XMarkIcon, StarIcon, PlayIcon } from '@heroicons/react/24/solid';
 import { useWatchlist } from '../context/WatchlistContext';
+import { QuickViewModal as TvQuickViewModal } from './TvShows';
 
 export default function Watchlist() {
   const { watchlist, removeFromWatchlist } = useWatchlist();
   const [sortBy, setSortBy] = useState('latest');
   const [selectedGenre, setSelectedGenre] = useState('all');
+  const [selectedTvShow, setSelectedTvShow] = useState(null);
 
   // Get unique genres from watchlist
   const allGenres = useMemo(() => {
@@ -119,7 +121,16 @@ export default function Watchlist() {
                 </button>
 
                 {/* Movie Card */}
-                <Link to={`/movies/${movie.id}`} className='group block'>
+                <Link 
+                  to={movie.type === 'tv' ? '#' : `/movies/${movie.id}`} 
+                  onClick={(e) => {
+                    if (movie.type === 'tv') {
+                      e.preventDefault();
+                      setSelectedTvShow(movie.id);
+                    }
+                  }}
+                  className='group block'
+                >
                   <div className='relative overflow-hidden rounded-xl border border-white/10 shadow-lg shadow-black/40 hover:border-white/30 transition h-96'>
                     {/* Image */}
                     <img
@@ -163,6 +174,10 @@ export default function Watchlist() {
           </div>
         )}
       </div>
+
+      {selectedTvShow && (
+        <TvQuickViewModal showId={selectedTvShow} onClose={() => setSelectedTvShow(null)} />
+      )}
     </div>
   );
 }

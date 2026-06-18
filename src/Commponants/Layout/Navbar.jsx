@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from "../../../public/logo.svg";
-import { MagnifyingGlassIcon, UserCircleIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import { BellIcon, UserCircleIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useNotifications } from '../../context/NotificationsContext';
 
 export default function Navbar() {
-  const [searchInput, setSearchInput] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const handleSearchNavigate = (e) => {
-    if (e.key === 'Enter' || e.type === 'click') {
-      // Navigate to search page
-    }
-  };
+  const { unreadCount } = useNotifications();
 
   const navItems = [
     { path: '', label: 'Home' },
@@ -67,22 +62,29 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Right: Search, Profile & Mobile Menu Toggle */}
-          <div className='flex items-center gap-4'>
-            {/* Search Box */}
-            <div className='relative hidden sm:flex items-center'>
-              <span className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
-                <MagnifyingGlassIcon className='w-4 h-4 text-gray-400' />
-              </span>
-              <input
-                type='text'
-                placeholder='Search movies...'
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={handleSearchNavigate}
-                className='w-44 focus:w-60 pl-9 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all duration-300'
-              />
-            </div>
+          {/* Right: Notification Bell, Profile & Mobile Menu Toggle */}
+          <div className='flex items-center gap-3'>
+
+            {/* Notification Bell */}
+            <NavLink
+              to='ProfileNav'
+              state={{ tab: 'notifications' }}
+              title="Notifications"
+              className={({ isActive }) =>
+                `relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 active:scale-95 cursor-pointer ${
+                  isActive
+                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
+                    : 'text-gray-300 hover:text-white hover:bg-slate-900 border border-slate-800 hover:border-slate-700'
+                }`
+              }
+            >
+              <BellIcon className='w-5 h-5' />
+              {unreadCount > 0 && (
+                <span className='absolute -top-1 -right-1 flex items-center justify-center w-4.5 h-4.5 min-w-[18px] min-h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] font-bold shadow-lg shadow-red-600/40 border border-slate-950 leading-none'>
+                  {unreadCount}
+                </span>
+              )}
+            </NavLink>
 
             {/* Profile Button */}
             <NavLink
@@ -119,21 +121,6 @@ export default function Navbar() {
       {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
         <div className='md:hidden bg-slate-950 border-b border-slate-900/80 px-4 pt-2 pb-6 space-y-4 animate-fade-in'>
-          {/* Mobile Search Box */}
-          <div className='relative w-full px-2'>
-            <span className='absolute inset-y-0 left-2 flex items-center pl-3 pointer-events-none'>
-              <MagnifyingGlassIcon className='w-4 h-4 text-gray-400' />
-            </span>
-            <input
-              type='text'
-              placeholder='Search movies...'
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={handleSearchNavigate}
-              className='w-full pl-9 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all'
-            />
-          </div>
-
           {/* Links List */}
           <ul className='space-y-1.5 px-2'>
             {navItems.map((item) => (
@@ -148,6 +135,27 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+
+          {/* Mobile Notification Link */}
+          <div className='px-2'>
+            <NavLink
+              to='ProfileNav'
+              state={{ tab: 'notifications' }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className='flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-slate-900 font-bold transition-all duration-200'
+            >
+              <span className='relative'>
+                <BellIcon className='w-5 h-5' />
+                {unreadCount > 0 && (
+                  <span className='absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-600 border border-slate-950' />
+                )}
+              </span>
+              Notifications
+              {unreadCount > 0 && (
+                <span className='ml-auto text-xs font-bold text-red-400'>{unreadCount} new</span>
+              )}
+            </NavLink>
+          </div>
         </div>
       )}
     </nav>

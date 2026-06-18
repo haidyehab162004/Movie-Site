@@ -10,6 +10,9 @@ import SearchNav from "../Commponants/Layout/SearchNav";
 import LoginForm from "../Commponants/Auth/LoginForm";
 import SignForm from "../Commponants/Auth/SignForm";
 import { WatchlistProvider } from "../context/WatchlistContext";
+import { SearchProvider } from "../context/SearchContext";
+import { FavoritesProvider } from "../context/FavoritesContext";
+import { NotificationsProvider } from "../context/NotificationsContext";
 
 const router = createBrowserRouter([
     {
@@ -37,8 +40,14 @@ const router = createBrowserRouter([
 
 export default function AppRouters() {
   return (
-    <WatchlistProvider>
-      <RouterProvider router={router} />
-    </WatchlistProvider>
+    <NotificationsProvider>
+      <SearchProvider>
+        <FavoritesProvider>
+          <WatchlistProvider>
+            <RouterProvider router={router} />
+          </WatchlistProvider>
+        </FavoritesProvider>
+      </SearchProvider>
+    </NotificationsProvider>
   );
-}
+}
