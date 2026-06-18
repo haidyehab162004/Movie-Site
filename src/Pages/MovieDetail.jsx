@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { PlayIcon, PlusIcon, StarIcon, CalendarIcon, ClockIcon } from '@heroicons/react/24/solid';
 import { moviesData } from '../data/moviesData';
+import { useWatchlist } from '../context/WatchlistContext';
 
 export default function MovieDetail() {
   const { id } = useParams();
   const movie = moviesData.find(m => m.id === parseInt(id));
-  const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
+  const inWatchlist = isInWatchlist(parseInt(id));
 
   if (!movie) {
     return (
@@ -81,20 +82,26 @@ export default function MovieDetail() {
 
               {/* Buttons */}
               <div className='flex flex-wrap gap-4'>
-                <button className='flex items-center gap-2 px-8 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-bold text-white transition'>
+                <button className='flex items-center gap-2 px-8 py-3 bg-red-600 hover:bg-red-700 rounded-xl font-bold text-white transition active:scale-95 duration-200 cursor-pointer shadow-lg shadow-red-600/20'>
                   <PlayIcon className='w-5 h-5' />
                   Watch Trailer
                 </button>
                 <button 
-                  onClick={() => setIsInWatchlist(!isInWatchlist)}
-                  className={`flex items-center gap-2 px-8 py-3 rounded-lg font-bold border-2 transition ${
-                    isInWatchlist 
-                      ? 'bg-amber-600 border-amber-600 text-white' 
-                      : 'border-white/30 text-white hover:border-white/60'
+                  onClick={() => {
+                    if (inWatchlist) {
+                      removeFromWatchlist(parseInt(id));
+                    } else {
+                      addToWatchlist(movie);
+                    }
+                  }}
+                  className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold border-2 transition active:scale-95 duration-200 cursor-pointer ${
+                    inWatchlist 
+                      ? 'bg-amber-600 border-amber-600 text-white shadow-lg shadow-amber-600/25' 
+                      : 'border-white/30 text-white hover:border-white/60 hover:bg-white/5'
                   }`}
                 >
                   <PlusIcon className='w-5 h-5' />
-                  {isInWatchlist ? 'Added' : 'Add to Watchlist'}
+                  {inWatchlist ? 'Added to Watchlist' : 'Add to Watchlist'}
                 </button>
               </div>
             </div>

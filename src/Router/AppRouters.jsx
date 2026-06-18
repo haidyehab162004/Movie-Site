@@ -9,6 +9,7 @@ import ProfileNav from "../Commponants/Layout/ProfileNav";
 import SearchNav from "../Commponants/Layout/SearchNav";
 import LoginForm from "../Commponants/Auth/LoginForm";
 import SignForm from "../Commponants/Auth/SignForm";
+import { WatchlistProvider } from "../context/WatchlistContext";
 
 const router = createBrowserRouter([
     {
@@ -35,5 +36,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function AppRouters() {
-  return <RouterProvider router={router} />;
+  return (
+    <WatchlistProvider>
+      <RouterProvider router={router} />
+    </WatchlistProvider>
+  );
 }
