@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   StarIcon, PlayIcon, PlusIcon, XMarkIcon,
   MagnifyingGlassIcon, HeartIcon, ChevronLeftIcon, ChevronRightIcon,
+  FireIcon, FilmIcon, TrophyIcon, RocketLaunchIcon,
 } from '@heroicons/react/24/solid';
 import { tmdb, img, backdrop, formatRating, formatRuntime, getGenreNames } from '../services/tmdb';
 import { useFetch, useDebounce } from '../hooks/useFetch';
@@ -262,11 +263,11 @@ export function QuickViewModal({ movieId, onClose }) {
 
 // ─── Main Movies Page ─────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { key: 'trending',  label: '🔥 Trending',   fetch: (p) => tmdb.trendingMovies(p) },
-  { key: 'popular',   label: '⭐ Popular',     fetch: (p) => tmdb.popularMovies(p) },
-  { key: 'nowPlaying',label: '🎬 Now Playing', fetch: (p) => tmdb.nowPlaying(p) },
-  { key: 'topRated',  label: '🏆 Top Rated',  fetch: (p) => tmdb.topRatedMovies(p) },
-  { key: 'upcoming',  label: '🚀 Upcoming',   fetch: (p) => tmdb.upcomingMovies(p) },
+  { key: 'trending',  label: 'Trending',    icon: FireIcon,         fetch: (p) => tmdb.trendingMovies(p) },
+  { key: 'popular',   label: 'Popular',     icon: StarIcon,         fetch: (p) => tmdb.popularMovies(p) },
+  { key: 'nowPlaying',label: 'Now Playing', icon: FilmIcon,         fetch: (p) => tmdb.nowPlaying(p) },
+  { key: 'topRated',  label: 'Top Rated',   icon: TrophyIcon,       fetch: (p) => tmdb.topRatedMovies(p) },
+  { key: 'upcoming',  label: 'Upcoming',    icon: RocketLaunchIcon, fetch: (p) => tmdb.upcomingMovies(p) },
 ];
 
 export default function Movies() {
@@ -329,17 +330,18 @@ export default function Movies() {
         {/* Category tabs (hidden when searching) */}
         {!isSearching && (
           <div className='flex flex-wrap gap-2'>
-            {CATEGORIES.map(({ key, label }) => (
+            {CATEGORIES.map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
                 onClick={() => handleCategory(key)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all active:scale-95 cursor-pointer ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all active:scale-95 cursor-pointer ${
                   category === key
                     ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20'
                     : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800'
                 }`}
               >
-                {label}
+                {Icon && <Icon className="w-3.5 h-3.5" />}
+                <span>{label}</span>
               </button>
             ))}
           </div>

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { XMarkIcon, StarIcon, PlayIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon, StarIcon, PlayIcon, CalendarIcon } from '@heroicons/react/24/solid';
 import { useWatchlist } from '../context/WatchlistContext';
 import { QuickViewModal as TvQuickViewModal } from './TvShows';
 
@@ -62,9 +62,9 @@ export default function Watchlist() {
                 <button
                   key={genre}
                   onClick={() => setSelectedGenre(genre)}
-                  className={`px-4 py-2 rounded-lg font-semibold transition ${
+                  className={`px-4 py-2 rounded-lg font-semibold transition active:scale-95 cursor-pointer ${
                     selectedGenre === genre
-                      ? 'bg-amber-500 text-white'
+                      ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
                       : 'bg-white/10 text-gray-300 hover:bg-white/20'
                   }`}
                 >
@@ -78,23 +78,25 @@ export default function Watchlist() {
           <div className='flex gap-3'>
             <button
               onClick={() => setSortBy('latest')}
-              className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition ${
+              className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition active:scale-95 cursor-pointer ${
                 sortBy === 'latest'
-                  ? 'bg-amber-500 text-white'
+                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
                   : 'bg-white/10 text-gray-300 hover:bg-white/20'
               }`}
             >
-              📅 Latest Added
+              <CalendarIcon className="w-4 h-4" />
+              Latest Added
             </button>
             <button
               onClick={() => setSortBy('rating')}
-              className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition ${
+              className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2 transition active:scale-95 cursor-pointer ${
                 sortBy === 'rating'
-                  ? 'bg-amber-500 text-white'
+                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
                   : 'bg-white/10 text-gray-300 hover:bg-white/20'
               }`}
             >
-              ⭐ Top Rated
+              <StarIcon className="w-4 h-4" />
+              Top Rated
             </button>
           </div>
         </div>

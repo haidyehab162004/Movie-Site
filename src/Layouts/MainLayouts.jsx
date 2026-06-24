@@ -6,13 +6,9 @@ import { Outlet } from 'react-router'
 
 export default function MainLayouts() {
   return (
-    <div>
+    <div className="pb-16 md:pb-0">
       <Navbar/>
-
-
-      {<Outlet/>}
-
-
+      <Outlet/>
       <Footer/>
     </div>
   )

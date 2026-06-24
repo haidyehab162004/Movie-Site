@@ -7,6 +7,7 @@ import {
   GlobeAltIcon, EyeIcon, TrashIcon, CheckIcon,
   EnvelopeIcon, DevicePhoneMobileIcon, KeyIcon,
   FilmIcon, FireIcon, SparklesIcon, CameraIcon,
+  ArrowUpTrayIcon,
 } from '@heroicons/react/24/solid';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useWatchlist } from '../../context/WatchlistContext';
@@ -15,14 +16,14 @@ import { QuickViewModal as TvQuickViewModal } from '../../Pages/TvShows';
 
 // ─── Avatar options ────────────────────────────────────────────────────────────
 const AVATARS = [
-  { id: 'dark', label: 'Dark Knight',   src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face' },
-  { id: 'cine', label: 'Cinephile',     src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face' },
-  { id: 'retro',label: 'Retro Queen',   src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face' },
-  { id: 'noir', label: 'Noir Detective',src: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face' },
-  { id: 'sci',  label: 'Sci-Fi Fan',    src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face' },
-  { id: 'indie',label: 'Indie Spirit',  src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face' },
-  { id: 'classic',label: 'Classic Era', src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face' },
-  { id: 'action',label: 'Action Hero',  src: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face' },
+  { id: 'av1', label: 'Super Hero', src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Felix' },
+  { id: 'av2', label: 'Spaceman',   src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Pepper' },
+  { id: 'av3', label: 'Cine Princess', src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka' },
+  { id: 'av4', label: 'Agent Zero', src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Jack' },
+  { id: 'av5', label: 'Retro Heroine', src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Mia' },
+  { id: 'av6', label: 'Sci-Fi Kid', src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Buster' },
+  { id: 'av7', label: 'Shadow Queen', src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Harley' },
+  { id: 'av8', label: 'Mystery Gal', src: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Bella' },
 ];
 
 // ─── Toggle Switch ─────────────────────────────────────────────────────────────
@@ -39,14 +40,30 @@ function Toggle({ checked, onChange }) {
 
 // ─── Avatar Picker Modal ───────────────────────────────────────────────────────
 function AvatarPicker({ current, onSelect, onClose }) {
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Image size must be less than 2MB");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        onSelect(event.target.result);
+        onClose();
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div className='fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md'>
+    <div className='fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-fade-in'>
       <div className='relative w-full max-w-lg bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 border border-slate-700/60 rounded-3xl shadow-2xl shadow-black/80 overflow-hidden'>
         {/* Header */}
         <div className='flex items-center justify-between p-6 border-b border-slate-800'>
           <div>
             <h3 className='text-xl font-black text-white'>Choose Your Avatar</h3>
-            <p className='text-slate-400 text-sm mt-0.5'>Pick your cinematic persona</p>
+            <p className='text-slate-400 text-sm mt-0.5'>Pick your cartoon persona</p>
           </div>
           <button onClick={onClose} className='p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer'>
             <XMarkIcon className='w-5 h-5' />
@@ -64,7 +81,7 @@ function AvatarPicker({ current, onSelect, onClose }) {
                   : 'border-slate-700/50 hover:border-slate-600 hover:bg-slate-800/50'
               }`}
             >
-              <div className='relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-slate-700 group-hover:ring-amber-400/50 transition'>
+              <div className='relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-slate-700 group-hover:ring-amber-400/50 transition bg-slate-950/40'>
                 <img src={av.src} alt={av.label} className='w-full h-full object-cover' />
                 {current === av.src && (
                   <div className='absolute inset-0 bg-amber-400/30 flex items-center justify-center'>
@@ -75,6 +92,21 @@ function AvatarPicker({ current, onSelect, onClose }) {
               <span className='text-[10px] font-semibold text-slate-400 text-center leading-tight group-hover:text-slate-300 transition'>{av.label}</span>
             </button>
           ))}
+        </div>
+
+        {/* Upload Custom Section */}
+        <div className='p-6 border-t border-slate-800 flex flex-col items-center gap-3 bg-slate-950/20 text-center'>
+          <p className='text-xs font-bold text-slate-400 uppercase tracking-wider'>Or upload your own custom photo</p>
+          <label className='flex items-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 hover:text-amber-300 rounded-xl text-sm font-bold transition active:scale-95 cursor-pointer border border-slate-700/60 shadow-lg shadow-black/40'>
+            <ArrowUpTrayIcon className='w-4 h-4' />
+            <span>Choose Image File</span>
+            <input 
+              type='file' 
+              accept='image/*' 
+              className='hidden' 
+              onChange={handleFileUpload} 
+            />
+          </label>
         </div>
       </div>
     </div>
@@ -186,6 +218,7 @@ export default function ProfileNav() {
   const handleSelectAvatar = (src) => {
     setAvatar(src);
     localStorage.setItem(LS_AVATAR, src);
+    window.dispatchEvent(new Event('avatarChanged'));
   };
 
   // Persist settings on every change
@@ -193,19 +226,86 @@ export default function ProfileNav() {
     localStorage.setItem(LS_SETTINGS, JSON.stringify(settings));
   }, [settings]);
 
+  const getCurrentPassword = () => {
+    const savedPassword = localStorage.getItem('cv_password');
+    if (savedPassword) return savedPassword;
+
+    const currentUsername = localStorage.getItem('cv_username');
+    const customUserStr = localStorage.getItem('cv_custom_user');
+    if (customUserStr) {
+      try {
+        const customUser = JSON.parse(customUserStr);
+        if (customUser && customUser.username === currentUsername) {
+          return customUser.password;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return currentUsername ? `${currentUsername}pass` : 'emilyspass';
+  };
+
   // Save profile
   const handleSave = () => {
     localStorage.setItem(LS_PROFILE, JSON.stringify(profile));
+    
+    // Sync to cv_custom_user if logged in as a custom user
+    const currentUsername = localStorage.getItem('cv_username');
+    const customUserStr = localStorage.getItem('cv_custom_user');
+    if (customUserStr) {
+      try {
+        const customUser = JSON.parse(customUserStr);
+        if (customUser && customUser.username === currentUsername) {
+          const nameParts = (profile.name || '').trim().split(' ');
+          customUser.firstName = nameParts[0] || '';
+          customUser.lastName = nameParts.slice(1).join(' ') || '';
+          customUser.email = profile.email || '';
+          localStorage.setItem('cv_custom_user', JSON.stringify(customUser));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     setSaved(true);
+    window.dispatchEvent(new Event('authChanged'));
     setTimeout(() => setSaved(false), 2500);
   };
 
-  // Password change (mock – just validates fields)
+  // Password change
   const handlePasswordSave = () => {
     setPasswordError('');
-    if (!passwordForm.current) { setPasswordError('Enter your current password.'); return; }
-    if (passwordForm.next.length < 8) { setPasswordError('New password must be at least 8 characters.'); return; }
-    if (passwordForm.next !== passwordForm.confirm) { setPasswordError('Passwords do not match.'); return; }
+    const currentPassword = getCurrentPassword();
+
+    if (passwordForm.current !== currentPassword) {
+      setPasswordError('Current password is incorrect.');
+      return;
+    }
+    if (passwordForm.next.length < 8) {
+      setPasswordError('New password must be at least 8 characters.');
+      return;
+    }
+    if (passwordForm.next !== passwordForm.confirm) {
+      setPasswordError('Passwords do not match.');
+      return;
+    }
+
+    localStorage.setItem('cv_password', passwordForm.next);
+
+    const currentUsername = localStorage.getItem('cv_username');
+    const customUserStr = localStorage.getItem('cv_custom_user');
+    if (customUserStr) {
+      try {
+        const customUser = JSON.parse(customUserStr);
+        if (customUser && customUser.username === currentUsername) {
+          customUser.password = passwordForm.next;
+          localStorage.setItem('cv_custom_user', JSON.stringify(customUser));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     setPasswordSaved(true);
     setPasswordForm({ current: '', next: '', confirm: '' });
     setTimeout(() => setPasswordSaved(false), 2500);
@@ -216,6 +316,9 @@ export default function ProfileNav() {
     localStorage.removeItem(LS_PROFILE);
     localStorage.removeItem(LS_SETTINGS);
     localStorage.removeItem(LS_AVATAR);
+    localStorage.removeItem('cv_password');
+    localStorage.removeItem('cv_username');
+    localStorage.removeItem('cv_custom_user');
     setProfile(defaultProfile);
     setSettings(defaultSettings);
     setAvatar(AVATARS[1].src);
@@ -224,6 +327,10 @@ export default function ProfileNav() {
 
   // Logout
   const handleLogout = () => {
+    localStorage.removeItem('cv_token');
+    localStorage.removeItem('cv_profile');
+    localStorage.removeItem('cv_avatar');
+    window.dispatchEvent(new Event('authChanged'));
     setShowLogoutConfirm(false);
     navigate('/auth/login');
   };
@@ -233,20 +340,18 @@ export default function ProfileNav() {
     if (location.state?.tab) setActiveSection(location.state.tab);
   }, [location.state]);
 
-  // Sidebar: collapsed = NOT hovered (fix from old code)
-  const isCollapsed = !sidebarHovered;
+  // Sidebar is permanently collapsed to icon-only view on desktop
+  const isCollapsed = true;
 
   const navItems = [
     { key: 'overview',      icon: FilmIcon,    label: 'Overview',      badge: null },
-    { key: 'notifications', icon: BellIcon,    label: 'Notifications', badge: unreadCount > 0 ? unreadCount : null },
     { key: 'editProfile',   icon: PencilIcon,  label: 'Edit Profile',  badge: null },
-    { key: 'settings',      icon: CogIcon,     label: 'Settings',      badge: null },
   ];
 
   // ─────────────────────────────────────────────────────────────────────────────
   // OVERVIEW
   // ─────────────────────────────────────────────────────────────────────────────
-  const OverviewContent = () => {
+  const renderOverviewContent = () => {
     const activeList = favTab === 'favorites' ? favorites : watchlist;
     return (
       <div className='space-y-8'>
@@ -270,13 +375,6 @@ export default function ProfileNav() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-          <StatCard icon={HeartIcon}       color='from-red-600/10 to-transparent'     borderColor='border-red-500/50'     label='Favorites' value={favorites.length} />
-          <StatCard icon={BookmarkIcon}    color='from-blue-600/10 to-transparent'    borderColor='border-blue-500/50'    label='Watchlist' value={watchlist.length} />
-          <StatCard icon={CheckCircleIcon} color='from-emerald-600/10 to-transparent' borderColor='border-emerald-500/50' label='Watched'   value={0} />
-          <StatCard icon={TrophyIcon}      color='from-amber-600/10 to-transparent'   borderColor='border-amber-500/50'   label='Level'     text='Gold' />
-        </div>
 
         {/* Tabs */}
         <div>
@@ -361,7 +459,7 @@ export default function ProfileNav() {
   // ─────────────────────────────────────────────────────────────────────────────
   // NOTIFICATIONS
   // ─────────────────────────────────────────────────────────────────────────────
-  const NotificationsContent = () => {
+  const renderNotificationsContent = () => {
     const unread = notifications.filter(n => n.unread);
     const read   = notifications.filter(n => !n.unread);
 
@@ -440,7 +538,7 @@ export default function ProfileNav() {
   // ─────────────────────────────────────────────────────────────────────────────
   // EDIT PROFILE
   // ─────────────────────────────────────────────────────────────────────────────
-  const EditProfileContent = () => (
+  const renderEditProfileContent = () => (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
@@ -566,7 +664,7 @@ export default function ProfileNav() {
   // ─────────────────────────────────────────────────────────────────────────────
   // SETTINGS
   // ─────────────────────────────────────────────────────────────────────────────
-  const SettingsContent = () => (
+  const renderSettingsContent = () => (
     <div className='space-y-6'>
       <div>
         <h2 className='text-2xl font-black text-white'>Settings</h2>
@@ -673,19 +771,67 @@ export default function ProfileNav() {
   return (
     <div className='bg-[#020617] min-h-screen text-white pb-16'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:px-8'>
-        <div className='flex gap-6 items-start'>
+        <div className='flex flex-col md:flex-row gap-6 items-start'>
 
-          {/* ── Sidebar ─────────────────────────────────────────────────────── */}
+          {/* ── Mobile Profile Header & Tabs ── */}
+          <div className='w-full md:hidden bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-3xl p-5 mb-2 flex flex-col gap-4 shadow-xl'>
+            <div className='flex items-center gap-4'>
+              <div className='relative shrink-0' onClick={() => setShowAvatarPicker(true)}>
+                <img src={avatar} alt='avatar' className='w-16 h-16 rounded-full border-3 border-amber-400 object-cover shadow-lg' />
+                <span className='absolute bottom-0.5 right-0.5 w-3 h-3 bg-emerald-400 border border-slate-900 rounded-full' />
+              </div>
+              <div className='min-w-0'>
+                <h2 className='text-lg font-black text-white leading-tight truncate'>{profile.name}</h2>
+                <p className='text-slate-400 text-xs truncate'>{profile.email}</p>
+                <span className='inline-block mt-1 bg-teal-900/50 text-teal-300 border border-teal-700/40 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider'>
+                  🎬 Cinephile Gold
+                </span>
+              </div>
+            </div>
+
+            {/* Mobile Tab List */}
+            <nav className='flex gap-2 overflow-x-auto pb-1.5 scrollbar-none snap-x'>
+              {navItems.map(({ key, icon: Icon, label, badge }) => {
+                const isActive = activeSection === key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setActiveSection(key)}
+                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap snap-align-start active:scale-95 transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg shadow-red-600/25'
+                        : 'bg-slate-800/80 border border-slate-700/60 text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    <Icon className='w-4 h-4' />
+                    <span>{label}</span>
+                    {badge && (
+                      <span className='bg-red-600 text-white text-[9px] font-black rounded-full px-1.5 py-0.5 leading-none'>
+                        {badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => setShowLogoutConfirm(true)}
+                className='flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap snap-align-start active:scale-95 transition-all cursor-pointer bg-slate-800/80 border border-slate-700/60 text-slate-400 hover:text-red-400 hover:border-red-600/20'
+              >
+                <ArrowRightOnRectangleIcon className='w-4 h-4' />
+                <span>Logout</span>
+              </button>
+            </nav>
+          </div>
+
+          {/* ── Sidebar ── */}
           <aside
-            onMouseEnter={() => setSidebarHovered(true)}
-            onMouseLeave={() => setSidebarHovered(false)}
-            className={`shrink-0 transition-all duration-500 ease-in-out ${isCollapsed ? 'w-16' : 'w-64'}`}
+            className='hidden md:block shrink-0 w-16'
           >
             <div className='sticky top-20 bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-3xl overflow-hidden shadow-2xl shadow-black/40'>
 
               {/* Profile Header */}
-              <div className={`flex flex-col items-center transition-all duration-500 ${isCollapsed ? 'px-2 py-5 gap-2' : 'px-5 pt-6 pb-5 gap-3'}`}>
-                <div className='relative cursor-pointer' onClick={() => !isCollapsed && setShowAvatarPicker(true)}>
+              <div className='flex flex-col items-center px-2 py-5 gap-2'>
+                <div className='relative cursor-pointer' onClick={() => setShowAvatarPicker(true)}>
                   <img
                     src={avatar}
                     alt='avatar'
@@ -754,11 +900,10 @@ export default function ProfileNav() {
           </aside>
 
           {/* ── Main Content ─────────────────────────────────────────────────── */}
-          <div className='flex-1 min-w-0'>
-            {activeSection === 'overview'      && <OverviewContent />}
-            {activeSection === 'notifications' && <NotificationsContent />}
-            {activeSection === 'editProfile'   && <EditProfileContent />}
-            {activeSection === 'settings'      && <SettingsContent />}
+          <div className='flex-1 min-w-0 w-full'>
+            {activeSection === 'overview'      && renderOverviewContent()}
+            {activeSection === 'notifications' && renderNotificationsContent()}
+            {activeSection === 'editProfile'   && renderEditProfileContent()}
           </div>
         </div>
       </div>

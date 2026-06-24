@@ -64,8 +64,8 @@ export default function MovieDetail() {
   return (
     <div className='min-h-screen bg-gradient-to-b from-slate-950 to-black text-white'>
       {/* Hero Section */}
-      <div className='relative h-[450px] md:h-[550px] overflow-hidden'>
-        <div className='absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent z-10' />
+      <div className='relative min-h-[580px] md:h-[600px] overflow-hidden flex items-end pt-24 pb-12'>
+        <div className='absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent z-10' />
         <div className='absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10' />
         {movieBackdrop ? (
           <img 
@@ -77,15 +77,15 @@ export default function MovieDetail() {
           <div className='absolute inset-0 w-full h-full bg-slate-900' />
         )}
         
-        <div className='relative z-20 h-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col justify-end pb-12'>
-          <div className='flex flex-col md:flex-row gap-8 items-end'>
+        <div className='relative z-20 max-w-7xl mx-auto px-6 md:px-12 w-full'>
+          <div className='flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-end text-center md:text-left'>
             {/* Movie Poster */}
             {moviePoster && (
-              <div className='hidden md:block shrink-0'>
+              <div className='shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 w-36 h-52 md:w-52 md:h-76'>
                 <img 
                   src={moviePoster} 
                   alt={movie.title}
-                  className='w-52 h-76 object-cover rounded-2xl shadow-2xl border border-white/10'
+                  className='w-full h-full object-cover'
                 />
               </div>
             )}
@@ -93,7 +93,7 @@ export default function MovieDetail() {
             {/* Info */}
             <div className='flex-1 space-y-4'>
               {/* Genres */}
-              <div className='flex flex-wrap gap-2'>
+              <div className='flex flex-wrap gap-2 justify-center md:justify-start'>
                 {movie.genres?.map((genre) => (
                   <span key={genre.id} className='px-3 py-1 bg-red-600/80 rounded-full text-xs font-semibold tracking-wide border border-red-500/20'>
                     {genre.name}
@@ -102,19 +102,19 @@ export default function MovieDetail() {
               </div>
 
               {/* Title */}
-              <h1 className='text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white'>
+              <h1 className='text-3xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white'>
                 {movie.title}
               </h1>
 
               {/* Tagline */}
               {movie.tagline && (
-                <p className='text-lg text-amber-300 italic font-medium'>
+                <p className='text-base md:text-lg text-amber-300 italic font-medium'>
                   "{movie.tagline}"
                 </p>
               )}
 
               {/* Info Row */}
-              <div className='flex flex-wrap gap-6 text-sm text-slate-300 font-semibold'>
+              <div className='flex flex-wrap gap-4 md:gap-6 text-sm text-slate-300 font-semibold justify-center md:justify-start'>
                 <div className='flex items-center gap-2 bg-slate-900/60 border border-slate-800 px-3 py-1.5 rounded-xl'>
                   <StarIcon className='w-4 h-4 text-amber-400' />
                   <span>{rating}</span>
@@ -131,11 +131,11 @@ export default function MovieDetail() {
               </div>
 
               {/* Buttons */}
-              <div className='flex flex-wrap gap-4 pt-2'>
+              <div className='flex flex-wrap gap-3 pt-2 justify-center md:justify-start'>
                 {trailerKey && (
                   <button 
                     onClick={() => window.open(`https://www.youtube.com/watch?v=${trailerKey}`, '_blank')}
-                    className='flex items-center gap-2 px-8 py-3.5 bg-red-600 hover:bg-red-700 rounded-2xl font-bold text-white transition active:scale-95 duration-200 cursor-pointer shadow-lg shadow-red-600/35'
+                    className='flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-2xl font-bold text-white transition active:scale-95 duration-200 cursor-pointer shadow-lg shadow-red-600/35'
                   >
                     <PlayIcon className='w-5 h-5' />
                     Watch Trailer
@@ -150,7 +150,7 @@ export default function MovieDetail() {
                       addToWatchlist(tmdbMovie);
                     }
                   }}
-                  className={`flex items-center gap-2 px-8 py-3.5 rounded-2xl font-bold border transition active:scale-95 duration-200 cursor-pointer ${
+                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold border transition active:scale-95 duration-200 cursor-pointer ${
                     inWatchlist 
                       ? 'bg-amber-500 border-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' 
                       : 'border-slate-700 bg-slate-900/40 text-white hover:border-slate-500 hover:bg-slate-900/80'
@@ -162,7 +162,7 @@ export default function MovieDetail() {
 
                 <button 
                   onClick={() => toggleFavorite(tmdbMovie)}
-                  className={`flex items-center justify-center p-3.5 rounded-2xl border transition active:scale-95 duration-200 cursor-pointer ${
+                  className={`flex items-center justify-center p-3 rounded-2xl border transition active:scale-95 duration-200 cursor-pointer ${
                     inFavorites 
                       ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-600/35' 
                       : 'border-slate-700 bg-slate-900/40 text-slate-300 hover:border-red-500/30 hover:text-red-400 hover:bg-slate-900/80'
